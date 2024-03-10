@@ -13,7 +13,5 @@ USER INTERACTIONS :
 You can move the ufo character with the mouse , and you can accelerate just pushing one key on the keyboard .
 You can also select to activate or not the audio (better experience if activated, you can also hear the monster laughing) , and there are also  buttons for setting the difficulty of the game (easy, normal , hard), default is easy.
 
-![command](https://user-images.githubusercontent.com/61746664/88437615-1fb0e100-ce07-11ea-9d9f-672f544b0355.png)
 
 
-To pass the level(and win the game) you have to reach the black hole at the end of the scene , without colliding with any element such as stars , metheoras and copy of planets .  If you collide, the the 'game over' scene will appear (also triggering the sound of an explosion) , while if you you are able to reach the black hole , you will see the 'you-win' scene .
