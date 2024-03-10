@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<div class="container" id ="div-01">
+        <h1 style="font-size: 150px; font-family: 'Arial', sans-serif;">Just a SpaceTrip</h1>
+        <br><br><br><br><br><br>
+        <button class="diamond-button" id="easy">Easy</button>
+        <button  class="diamond-button" id="medium">Medium</button>
+        <button  class="diamond-button" id="hard">Hard</button>
+        <br> 
+        <label  class="your-label-class" for="soundToggle">Sound:</label>
+        <input type="checkbox" id="soundToggle" id="myCheckbox"> 
+        <br>
+</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #commands {
+            background-color: #222;
+            color: #fff;
+            padding: 10px;
+            margin-top: 20px;
+            height: 200px;
+            overflow: auto;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .purple-button {
+            background-color: #4B0082; /* Purple */
+            color: #fff; /* White text */
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+            font-weight: bold; /* Set the font weight */
+            width: 200px; /* Set the button width */
+            height: 80px; /* Set the button height */
+        }
+        .purple-button:hover {
+            background-color: #000; /* Black on hover */
+        }
+        .transparent-button {
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+            color: #fff; /* White text color */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 300px; /* Set the button width */
+            height: 150px; /* Set the button height */
+            font-size: 40px;
+            font-weight: bold; /* Set the font weight */
+            margin: 10px;
+        }
+        .diamond-button {
+         background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+         border: none;
+         color: white;
+         padding: 20px;
+         text-align: center;
+         text-decoration: none;
+         display: inline-block;
+         width: 300px; /* Set the button width */
+         height: 150px; /* Set the button height */
+         font-size: 40px;
+         font-weight: bold; /* Set the font weight */
+         transform: skew(-30deg); /* Skew horizontally */
+    } 
+        
+        body {
+            background-image: url('textures/StarsMap_2500x1250.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        #soundToggle {
+            position: absolute;
+            bottom: 0px;
+            left: 140px;
+            width: 40px; /* Set the button width */
+            height: 40px;
+        }
+        .your-label-class {
+         position: fixed;
+         bottom: 0;
+         left: 0;
+         font-size: 40px;
+}
+    </style>
+<script type="text/javascript" src="build/three.js"></script>       
+<script type="text/javascript" src="build/three.min.js"></script>  
+<script type="text/javascript" src="build/three.module.js"></script>
+<script type="text/javascript" src="physi.js"></script> 
+
+	    
+</head>
+<body>
+   
+
+    <script  type="module">
+
+
+          var texture_eye;
+          var texture_tenct;
+          var Enemy = function(){
+          this.mesh = new THREE.Object3D();
+          this.mesh.name = "Enemy";
+          // Create the body - the body is a sphere 
+          var geomBody = new THREE.SphereGeometry( 1000, 1000, 1000 );
+          var matBody = new THREE.MeshPhongMaterial({map:texture_eye 
+            });
+          var body = new THREE.Mesh(geomBody, matBody);
+          body.rotation.y=-90;
+          this.mesh.add(body);
+          // Create first of 9  tenctacle
+          var geom_tenctacle = new THREE.BoxGeometry(100,3500,1);
+          var mat_tenctacle = new THREE.MeshPhongMaterial({map:texture_tenct  
+            });
+          this.tenctacle_1 = new THREE.Mesh(geom_tenctacle,mat_tenctacle);
+          this.tenctacle_1.position.set(-50,+400,+50);
+          this.mesh.add(this.tenctacle_1);
+          this.tenctacle_2 =new THREE.Mesh(geom_tenctacle,mat_tenctacle);
+          this.tenctacle_2.position.set(-50,-400,+50);
+          this.mesh.add(this.tenctacle_2);
+          this.tenctacle_3 =new THREE.Mesh(geom_tenctacle,mat_tenctacle);
+          this.tenctacle_3.position.set(-400,+110,+50);
+          this.tenctacle_3.rotation.z=30;
+          this.mesh.add(this.tenctacle_3);
+          this.tenctacle_4 =new THREE.Mesh(geom_tenctacle,mat_tenctacle);
+          this.tenctacle_4.position.set(-400,+100,+50);
+          this.tenctacle_4.rotation.z=-90;
+          this.mesh.add(this.tenctacle_4);
+          this.tenctacle_5 =new THREE.Mesh(geom_tenctacle,mat_tenctacle);
+          this.tenctacle_5.position.set(+400,-200,50);
+          this.tenctacle_5.rotation.z=180;
+          this.mesh.add(this.tenctacle_5);
+          this.tenctacle_6 =new THREE.Mesh(geom_tenctacle,mat_tenctacle);
+          this.tenctacle_6.rotation.z=-180;
+          this.tenctacle_6.position.set(+400,-200,50);
+          this.mesh.add(this.tenctacle_6);
+          this.tenctacle_7 =new THREE.Mesh(geom_tenctacle,mat_tenctacle);
+          this.tenctacle_7.rotation.z=-270;
+          this.tenctacle_7.position.set(+400,-200,50);
+          this.mesh.add(this.tenctacle_7);
+          this.tenctacle_8 =new THREE.Mesh(geom_tenctacle,mat_tenctacle);
+          this.tenctacle_8.rotation.z=+270;
+          this.tenctacle_8.position.set(+400,-200,50);
+          this.mesh.add(this.tenctacle_8);
+          this.tenctacle_9 =new THREE.Mesh(geom_tenctacle,mat_tenctacle);
+          this.tenctacle_9.rotation.z=+125;
+          this.tenctacle_9.position.set(+400,-200,50);
+          this.mesh.add(this.tenctacle_9);
+        }
+        
+        import {OBJLoader} from './theLoader.js';
+        Physijs.scripts.worker = './physijs_worker.js';
+        Physijs.scripts.ammo = './ammo.js';
+        
+        
+        var container;
+        var camera, scene, renderer;
+        var camera2;
+        var difficulty=0;
+        var mouseX = 0, mouseY = 0, mouseZ=0;
+        var sound , sound2,sound3;
+        var windowHalfX = window.innerWidth / 2;
+        var windowHalfY = window.innerHeight / 2;
+        var clock = new THREE.Clock();
+        var current_scene;
+        var current_camera ;
+        var object;
+        var player;
+        var metheora =[];
+        var planet=[];
+        var planets=[];
+        var stars=[];
+        var flag=false;
+        var black_hole;
+        var scene_val=0;
+        var sound_activated=false;
+        var enemy;
+        var end_game = false;
+        
+        window.requestAnimFrame = (function(){
+                      return  window.requestAnimationFrame       || 
+                              window.webkitRequestAnimationFrame || 
+                              window.mozRequestAnimationFrame    || 
+                              window.oRequestAnimationFrame      || 
+                              window.msRequestAnimationFrame     || 
+                              function( callback ){
+                                window.setTimeout(callback, 1000 / 60);
+                              };
+                    })();
+        
+        function CheckLoading() {
+        var x = document.getElementById("loading");
+        if (x.style.display === "none") {
+        x.style.display = "block";
+        } else {
+        x.style.display = "none";
+        }
+}
+
+        init();
+        
+        
+        function init() {
+            
+                
+        
+            container = document.createElement( 'div' );
+            document.body.appendChild( container );
+           
+            
+         //creating camera,camera2 scene , Lighting and the renderer
+            camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 100000 );
+            camera.position.set( 0, 100, 800 );
+            camera2 =  new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 1000 );
+            camera2.position.set(10, 10, 10);
+            //create the Physijs scene
+            scene = new Physijs.Scene;
+            //create the game over scene as three js scene 
+            var scene1=new THREE.Scene;
+            //create the win scene as three js scene 
+            var scene2=new THREE.Scene;
+            //set no gravity to physijs scene 
+            scene.setGravity(false);
+            scene.add( camera );
+            camera.lookAt( scene.position );
+            //creating an ambient light and 2 point lights. One is set to the location of the nemy monster  
+            var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+            scene.add( ambientLight );
+            var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
+            var pointLight2 = new THREE.PointLight( 0xffffff, 0.9 );
+            pointLight2.position.set(-80,-80,-55000);
+            camera.add( pointLight );
+            camera.add(pointLight2);
+            var canvas = document.querySelector('#c');
+            renderer = new THREE.WebGLRenderer({ alpha:true});
+            renderer.clearDepth();
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            container.appendChild( renderer.domElement );
+            if(scene_val!=1){
+                current_scene=scene;
+                current_camera=camera;
+                scene_val=1;
+        
+            }
+           
+           
+            //setting the background
+            const loader5 = new THREE.TextureLoader();
+            loader5.load('textures/StarsMap_2500x1250.jpg' , function(texture)
+                    {
+                     scene.background = texture;  
+                    });
+               
+               
+          
+           
+                
+        
+                    // function for loading the ufo model 
+            function loadModel() {
+        
+                object.traverse( function ( child ) {
+        
+                    if ( child.isMesh ) child.material.map = texture;
+                    
+                        object.position.y=-60;
+			object.position.z=3000;
+                        scene.add( object );   
+                        
+                })
+                flag=true; 
+                CheckLoading();
+                
+        } 
+               
+        
+            
+              //creating the hitbox for the model collision detection 
+              //setting the sound and the game over scene on collision 
+                var geometry2 = new THREE.CylinderGeometry( 110, 110, 90 );
+                player= new Physijs.CylinderMesh(geometry2);
+                player.transparent=true;
+                player.visible=false;
+                player.addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("box collided with something"); 
+                        scene.remove(object); 
+                        if(sound_activated==true){
+                        sound.pause();
+                        sound2.play();
+        
+                        }
+                       
+                        
+                         
+                        if(scene_val!=2){
+                                current_scene=scene1;
+                                current_camera=camera2;
+                                scene_val=2;
+                                end_game=true;
+                                if(end_game==true){
+                                document.body.appendChild(overlayDiv_2);}
+                                document.getElementById('restart').addEventListener('click', function() {
+                                        console.log("i am here baby");
+                                        location.reload();
+                                        overlayDiv_2.remove();
+                                }); 
+                                
+                        }
+                       
+                  
+                        
+                        
+                })
+                scene.add(player);
+                    
+                
+                
+            
+            
+                
+        
+          
+        
+        
+            var manager = new THREE.LoadingManager( loadModel );
+        
+            manager.onProgress = function ( item, loaded, total ) {
+        
+                console.log( item, loaded, total );
+                    
+                           
+                   
+        
+            };
+        
+                // loading all textures that we neeed
+                var textureLoader = new THREE.TextureLoader(  );
+                var texture = textureLoader.load( 'textures/6842.jpg' );
+                var texture_star=textureLoader.load('textures/star.jpg');
+                var texture_metheora=textureLoader.load('textures/metheora.jpg');
+                var texture_black_hole=textureLoader.load('textures/black_hole.jpg')
+                var texture2=textureLoader.load('textures/earth_text.jpg');
+                var texture3=textureLoader.load('textures/moon_text.jpg');
+                var texture_1=textureLoader.load('textures/2k_mercury.jpg');
+                var texture_2=textureLoader.load('textures/2k_neptune.jpg');
+                var texture_3=textureLoader.load('textures/2k_uranus.jpg');
+                var text_game_over=textureLoader.load('game_over.jpg.jpg');
+                var text_win=textureLoader.load('textures/StarsMap_2500x1250.jpg.jpg');
+                texture_eye=textureLoader.load('textures/eye_4.jpg');
+                texture_tenct=textureLoader.load('textures/tenct_2.jpg');
+            //calling the function to create the hierarchical model of the enemy 
+                enemy=new Enemy();
+                //add enemy to scene 
+                scene.add(enemy.mesh);
+        
+                function onProgress( xhr ) {
+        
+                        if ( xhr.lengthComputable ) {
+        
+                                var percentComplete = xhr.loaded / xhr.total * 100;
+                                console.log( 'model ' + Math.round( percentComplete, 2 ) + '% downloaded' );
+        
+                        }
+        
+                }
+        
+                function onError() {}
+               
+                // load the flying disk object 
+                var loader = new OBJLoader( manager );
+        
+                loader.load( 'models/flying Disk flying.obj', function ( obj ) {
+        
+                        object = obj;
+        
+                }, onProgress, onError );
+                //creating geometries and materials(from textures) for planets in the scene 
+                var geometry = new THREE.SphereGeometry( 70, 70, 70 );
+                var material = new THREE.MeshBasicMaterial( {
+                                map: texture_star
+                         } );
+                var geometry_planet=new THREE.SphereGeometry(100,100,100);
+                var material_1 = new THREE.MeshBasicMaterial( {
+                                map: texture2
+                         } );
+                         var material_2 = new THREE.MeshBasicMaterial( {
+                                map: texture3
+                         } );
+                         var material_3 = new THREE.MeshBasicMaterial( {
+                                map: texture_1
+                         } );
+                         var material_4 = new THREE.MeshBasicMaterial( {
+                                map: texture_2
+                         } );
+                         var material_5 = new THREE.MeshBasicMaterial( {
+                                map: texture_3
+                         } );
+                
+                //instanciating all the planets with random position taken from the interval(-1500,1500) both on x and y axis and add also a collider 
+        
+                for(var i=0;i<20;i++){
+                        planet[i]=new  Physijs.SphereMesh( geometry_planet, material_1);
+                        planet[i].position.set(Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        planet[i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("box collided with something");   
+                       
+                })
+                scene.add(planet[i]);
+                }
+                for(var i=0;i<20;i++){
+                        planet[20+i]=new  Physijs.SphereMesh( geometry_planet, material_2);
+                        planet[20+i].position.set(Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        planet[20+i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("box collided with something");   
+                        
+                })
+                scene.add(planet[20+i]);
+                }
+                for(var i=0;i<20;i++){
+                        planet[40+i]=new  Physijs.SphereMesh( geometry_planet, material_3);
+                        planet[40+i].position.set(Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*3001-1500),Math.floor(Math.random()*(-49001)-1000));
+                        planet[40+i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("box collided with something");   
+                       
+                })
+                scene.add(planet[40+i]);
+                }
+                for(var i=0;i<20;i++){
+                        planet[60+i]=new  Physijs.SphereMesh( geometry_planet, material_4);
+                        planet[60+i].position.set(Math.floor(Math.random()*3001-1500),Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        planet[60+i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("box collided with something");   
+                        
+                })
+                scene.add(planet[60+i]);
+                }
+                for(var i=0;i<20;i++){
+                        planet[80+i]=new  Physijs.SphereMesh( geometry_planet, material_5);
+                        planet[80+i].position.set(Math.floor(Math.random()*3001-1500),Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        planet[80+i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("planet collided with something");   
+                        
+                })
+                scene.add(planet[80+i]);
+                }
+                for(var i=0;i<50;i++){
+                        planets[i]=new  Physijs.SphereMesh( geometry_planet, material_1);
+                        planets[i].position.set(Math.floor(Math.random()*3001-1500),Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        planets[i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("box collided with something");   
+                       
+                })
+                scene.add(planets[i]);
+                }
+                for(var i=0;i<50;i++){
+                        planets[50+i]=new  Physijs.SphereMesh( geometry_planet, material_2);
+                        planets[50+i].position.set(Math.floor(Math.random()*3001-1500),Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        planets[50+i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("box collided with something");   
+                        
+                })
+                scene.add(planets[50+i]);
+                }
+                for(var i=0;i<50;i++){
+                        planets[100+i]=new  Physijs.SphereMesh( geometry_planet, material_3);
+                        planets[100+i].position.set(Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        planets[100+i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("box collided with something");   
+                        
+                })
+                scene.add(planets[100+i]);
+                }
+                for(var i=0;i<50;i++){
+                        planets[150+i]=new  Physijs.SphereMesh( geometry_planet, material_4);
+                        planets[150+i].position.set(Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        planets[150+i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("box collided with something");   
+                       
+                })
+                scene.add(planets[150+i]);
+                }
+                for(var i=0;i<50;i++){
+                        planets[200+i]=new  Physijs.SphereMesh( geometry_planet, material_5);
+                        planets[200+i].position.set(Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        planets[200+i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("planet collided with something");   
+                       
+                })
+                scene.add(planets[200+i]);
+                }
+                
+                      
+                
+                // declaring material and geometry for metheoras in the scene 
+                var material = new THREE.MeshBasicMaterial( {map:texture_star});
+                
+                var geometry1 = new THREE.SphereGeometry( 25, 25, 25 );
+                var material1 = new THREE.MeshBasicMaterial( {map:texture_metheora});
+                for(var i=0;i<100;i++){
+                        metheora[i]=new  Physijs.SphereMesh( geometry1, material1);
+                        metheora[i].position.set(Math.floor(Math.random()*3001-1500),Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        metheora[i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("planet collided with something");   
+                        
+                })
+                        scene.add(metheora[i]);
+                }
+                for(var i=0;i<100;i++){
+                        metheora[100+i]=new Physijs.SphereMesh( geometry1, material1);
+                        metheora[100+i].position.set(Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        metheora[100+i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("planet collided with something"); 
+                        
+                })
+                        scene.add(metheora[100+i]);
+                }
+                for(var i=0;i<100;i++){
+                        metheora[200+i]=new Physijs.SphereMesh( geometry1, material1);
+                        metheora[200+i].position.set(Math.floor(Math.random()*3001-1500),Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        metheora[200+i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("planet collided with something"); 
+                      
+                })
+                        scene.add(metheora[200+i]);
+                }
+                //instanciating the stars 
+             
+        for(var i=0;i<250;i++){
+                        stars[i]=new  Physijs.SphereMesh( geometry, material);
+                        stars[i].position.set(Math.floor(Math.random()*3001-1500),Math.floor(Math.random()*3001-1500), Math.floor(Math.random()*(-49001)-1000));
+                        stars[i].addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("planet collided with something");   
+                        
+                })
+                        scene.add(stars[i]);
+                }
+        
+             //creating the planes for attaching textures of game over and you win scene 
+             var mat = new THREE.MeshBasicMaterial({
+              map: text_game_over
+            });
+           
+            var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000), mat);
+           
+            scene1.add(plane);
+            
+            var mat3 = new THREE.MeshBasicMaterial({
+              map: text_win
+            });
+           
+            var plane2 = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000),mat3);
+           
+            scene2.add(plane2);
+
+            const overlayDiv = document.createElement('div');
+            overlayDiv.id = 'overlay';
+            overlayDiv.innerHTML=' <h1 style="font-size: 150px ; font-family: "Arial", sans-serif;">YOU WIN!</h1> <button  class="transparent-button" id="restart">Restart Game</button>';
+            const overlayDiv_2 = document.createElement('div-2');
+            overlayDiv_2.id = 'overlay';
+            overlayDiv_2.innerHTML=' <h1 style="font-size: 150px ; font-family: "Arial", sans-serif;">YOU LOOSE!</h1> <button  class="transparent-button" id="restart">Restart Game</button>';
+            const element = document.getElementById("div-01");
+           
+        //declaring the black hole , if u collide with it you win 
+            var black_hole_geometry=new THREE.CylinderGeometry(900,900,900);
+                var black_hole_material = new THREE.MeshBasicMaterial( {
+                                map: texture_black_hole
+                         } );
+                black_hole=new Physijs.CylinderMesh(black_hole_geometry,black_hole_material);
+                black_hole.addEventListener('collision', function(theOtherObject, linearVelocity, angularVelocity, arg4){
+                        console.log("box collided with something"); 
+                        if(theOtherObject==player){
+                                sound.pause();
+                                sound2.pause();
+                                //element.add()
+                                current_scene=scene2;
+                                current_camera=camera2;
+                                scene_val=3;
+                                end_game=true;
+                                document.body.appendChild(overlayDiv);
+                                overlayDiv_2.remove();
+                                document.getElementById('restart').addEventListener('click', function() {
+                                        console.log("i am here baby");
+                                        location.reload();
+                                        overlayDiv.remove();
+                                }); 
+                                
+                        }
+                })
+                
+                scene.add(black_hole);    
+       
+        // Add event listeners for difficulty buttons
+        document.getElementById('easy').addEventListener('click', function() {
+            // Handle easy difficulty logic
+            difficulty=0;
+            element.remove();
+            animate();
+        });
+        document.getElementById('medium').addEventListener('click', function() {
+            // Handle medium difficulty logic
+            difficulty=1;
+            element.remove();
+            animate();
+            element.add();
+        });
+        document.getElementById('hard').addEventListener('click', function() {
+            // Handle hard difficulty logic
+            difficulty=2;
+            element.remove();
+            animate();
+        });
+
+        // Add event listener for sound toggle
+        document.getElementById('soundToggle').addEventListener('change', function() {
+            const soundEnabled = this.checked;
+            if (soundEnabled) {
+                // Enable sound
+                sound_activated=true;
+                var listener = new THREE.AudioListener();
+                camera.add( listener );
+                var audioLoader = new THREE.AudioLoader();
+                 sound=new THREE.Audio(listener);
+                scene.add(sound);
+                audioLoader.load( 'audio/ufo_audio.ogg', function( audioBuffer ) {
+                        sound.setBuffer( audioBuffer );
+                        sound.setLoop( true );
+                        sound.setVolume( 0.5 );
+                        sound.play();
+                        
+                       
+                },
+                function ( xhr ) {
+                        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+                },
+        
+                
+                function ( err ) {
+                        console.log( 'An error happened' );
+                });
+               //audio of exxplosion on collision 
+                var listener2 = new THREE.AudioListener();
+                camera.add( listener2 );
+                var audioLoader2 = new THREE.AudioLoader();
+                 sound2=new THREE.Audio(listener2);
+                scene.add(sound2);
+                audioLoader2.load( 'audio/Explosion+3.ogg', function( audioBuffer2 ) {
+                        sound2.setBuffer( audioBuffer2 );
+                        sound2.setVolume( 0.5 );
+                       
+                },
+                function ( xhr ) {
+                        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+                },
+        
+                
+                function ( err ) {
+                        console.log( 'An error happened' );
+                });
+                //audio of the enemy laughing while you are near it 
+                var listener3 = new THREE.AudioListener();
+                camera.add( listener3 );
+                var audioLoader3 = new THREE.AudioLoader();
+                 sound3=new THREE.Audio(listener2);
+                scene.add(sound3);
+                audioLoader2.load( 'audio/Evil_Laugh_Male_6-Himan-1359990674.ogg', function( audioBuffer3 ) {
+                        sound3.setBuffer( audioBuffer3 );
+                        sound3.setLoop( true );
+                        sound3.setVolume( 0.5 );
+                        
+                },
+                function ( xhr ) {
+                        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+                },
+        
+                
+                function ( err ) {
+                        console.log( 'An error happened' );
+                });
+            } else {
+                // Disable sound
+                displayCommands('Sound deactivated.');
+            }
+        });
+
+        // Function to display commands in the window
+        function displayCommands(message) {
+            const commandsWindow = document.getElementById('commands');
+            commandsWindow.innerHTML += `<p>${message}</p>`;
+        }
+         //event listener 
+         document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+         document.addEventListener("keydown", onDocumentClick,false );
+         window.addEventListener( 'resize', onWindowResize, false );
+              
+        
+        
+        
+        }
+        
+         //function for moving the objject and also the camera
+        function onDocumentClick(event ){
+                mouseZ-=100
+                object.position.z-=50;
+                camera.position.z-=50;
+                
+                
+                
+                
+               
+                
+               
+        }
+        //function on window resize to match the size with the browser
+        function onWindowResize() {
+        
+                windowHalfX = window.innerWidth / 2;
+                windowHalfY = window.innerHeight / 2;
+        
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+        
+                renderer.setSize( window.innerWidth, window.innerHeight );
+        
+                }
+        //function for following the movement of the player with the mouse 
+        function onDocumentMouseMove( event ) {
+        
+                mouseX = ( event.clientX - windowHalfX) ;
+                mouseY = ( event.clientY - windowHalfY);
+                
+                
+        
+                }
+                //function for checking if the player is near to the enemy 
+        function check_evil_laugh(pos_z){
+                if(pos_z<-40000){
+                        sound3.play();
+                }
+        }
+        //function for limiting screen in beetween the interval where colliders are created
+        //it avoid to easiily win the game jjust getting out of the screen with the object 
+        function limit_screen(pos_x,pos_y){
+        
+                if(pos_x>1400){
+                object.position.x=1400;
+                ;
+                }else if(pos_x<-1400){
+                object.position.x=-1400;
+                }
+                else if(pos_y>1400){
+                object.position.y=1400;
+               }
+                else if(pos_y<-1400){
+                object.position.y=-1400;
+                }
+        }       
+                                
+        
+        function animate() {
+          requestAnimationFrame( animate );
+                
+               
+        if(difficulty==0){
+        
+        //set linear velocity of the stars on the z-axis 
+        for(var i=0;i<250;i++){
+        stars[i].setLinearVelocity(new THREE.Vector3(2, 2, 1000));
+        }
+        //set linear velocity of the metheoras on the z-axis 
+        for(var i=0;i<300;i++){
+        metheora[i].setLinearVelocity(new THREE.Vector3(50, 100, 1800));
+        }
+        for(var i=0;i<100;i++){
+        //planets are almost fixed
+        planet[i].setLinearVelocity(new THREE.Vector3(20, 20, 250));
+        }
+        for(var i=0;i<250;i++){
+        planets[i].setLinearVelocity(new THREE.Vector3(20, 20, 250));
+        }
+        } else if(difficulty==1){
+        for(var i=0;i<250;i++){
+        stars[i].setLinearVelocity(new THREE.Vector3(Math.random(), Math.random(), 2500));
+        }
+        
+        for(var i=0;i<300;i++){
+        metheora[i].setLinearVelocity(new THREE.Vector3(50, 100, 3000));
+        }
+        for(var i=0;i<100;i++){
+        planet[i].setLinearVelocity(new THREE.Vector3(20, 20, 250));
+        }
+        for(var i=0;i<250;i++){
+        planets[i].setLinearVelocity(new THREE.Vector3(20, 20, 250));
+        }
+        
+        }else if(difficulty==2){
+        for(var i=0;i<250;i++){
+        stars[i].setLinearVelocity(new THREE.Vector3(Math.random(), Math.random(), 4000));
+        }
+        
+        for(var i=0;i<300;i++){
+        metheora[i].setLinearVelocity(new THREE.Vector3(Math.random()*100,Math.random()*100, 6500));
+        }
+        for(var i=0;i<100;i++){
+        planet[i].setLinearVelocity(new THREE.Vector3(20, 20, 250));
+        }
+        for(var i=0;i<250;i++){
+        planets[i].setLinearVelocity(new THREE.Vector3(20, 20, 250));
+        }
+        
+        }
+        
+        //set the rotation of the model for giving moviiment tools 
+        object.rotation.y+=0.01
+        //setting camera and obbject position according to the mouse event handler 
+        camera.position.x += ( mouseX - camera.position.x ) * .10;
+        camera.position.y += ( - mouseY - camera.position.y ) * .10;
+        object.position.x+=  ( mouseX - camera.position.x ) * .20;
+        object.position.y+= (- mouseY - camera.position.y ) * .20;
+        //call the limit screen function 
+        limit_screen(object.position.x,object.position.y);
+        //fix the camera on the player like a three  person game 
+        camera.position.z=object.position.z+1000;
+        //set the hitbox of the player on the ufo object 
+        player.position.set(object.position.x,object.position.y+100,object.position.z+30);
+        player.__dirtyPosition = true;
+        //set the black_hole position at the end of the game 
+        black_hole.position.set(-80,-80,-50000);
+        //set the rotation of the black hole for giving some movement 
+        black_hole.rotation.y+=3;
+        //set the position of the enemy 
+        enemy.mesh.position.set(+1000,+2500,-55000);
+        //activate the rotatin of the hiarachical model exploiting his structure 
+        enemy.mesh.rotation.z+=0.02;
+        black_hole.__dirtyPosition=true;
+        //check if enemy has to laugh 
+        check_evil_laugh(object.position.z);
+        render();
+        }
+        
+                function render() {
+                        //check the diffuclty 
+                      
+                        //print the position of the object onn the console 
+                        //console.log("position x :",object.position.x); 
+                        //console.log("position y :",object.position.y); 
+                        //console.log("position z :",object.position.z); 
+                        //scene.simulate(clock.getDelta(),(1));
+                        scene.simulate();
+                        renderer.render( current_scene, current_camera );
+                        
+                        
+        
+            }
+        
+        
+    </script>
+</body>
+</html>
